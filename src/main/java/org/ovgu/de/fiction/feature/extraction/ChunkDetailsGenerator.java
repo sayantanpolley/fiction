@@ -1,10 +1,6 @@
 package org.ovgu.de.fiction.feature.extraction;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,7 +80,6 @@ public class ChunkDetailsGenerator {
 			try {
 				BookDetails book = new BookDetails();
 				book.setBookId(fileName);
-				LOG.debug("****************************"+fileName+"**********************************");
 				book.setMetadata(FRGeneralUtils.getMetadata(fileName));
 				book.setChunks(getChunksFromFile(file.toString())); // this is a
 																	 // list of
@@ -95,7 +90,6 @@ public class ChunkDetailsGenerator {
 																	 // a feature
 																	 // object/vector
 				book.setAverageTTR(feu.getAverageTTR(getEqualChunksFromFile(getTokensFromAllChunks(book.getChunks()))));
-				LOG.debug("\n\n************** TTR AVERAGE ISSUE RESOLVED *************\n");
 				book.setNumOfChars(NUM_OF_CHARS_PER_BOOK == 0 ? 1 : NUM_OF_CHARS_PER_BOOK);
 				books.add(book);
 
@@ -154,8 +148,8 @@ public class ChunkDetailsGenerator {
 		List<Word> wordList = cncpt.getWords();
 		int numOfSntncPerBook  = cncpt.getNumOfSentencesPerBook();
 
-		 String fileName =
-		 Paths.get(path).getFileName().toString().replace(FRConstants.CONTENT_FILE, FRConstants.NONE);
+		// String fileName =
+		// Paths.get(path).getFileName().toString().replace(Constants.CONTENT_FILE, Constants.NONE);
 
 		ParagraphPredicate filter = new ParagraphPredicate();
 		List<Word> copy = new ArrayList<>(wordList);
@@ -351,12 +345,13 @@ public class ChunkDetailsGenerator {
 
 			Chunk chunk = new Chunk();
 			chunk.setChunkNo(chunkNo);
-			 String chunkFileName = OUT_FOLDER_TOKENS + fileName + "-" +chunkNo + FRConstants.CHUNK_FILE;
-			 try (Writer contentWtr = new BufferedWriter(new
-			 OutputStreamWriter(new FileOutputStream(chunkFileName)));) {
-			 contentWtr.write(Chunk.getOriginalText(raw));
-			 chunk.setChunkFileLocation(chunkFileName);
-			 }
+			// String chunkFileName = OUT_FOLDER_TOKENS + fileName + "-" +
+			// chunkNo + Constants.CHUNK_FILE;
+			// try (Writer contentWtr = new BufferedWriter(new
+			// OutputStreamWriter(new FileOutputStream(chunkFileName)));) {
+			// contentWtr.write(Chunk.getOriginalText(raw));
+			// chunk.setChunkFileLocation(chunkFileName);
+			// }
 			System.out.println("numbr of sentences for sentiment  ="+randomSntnCount+" for chunknum ="+chunkNo+", and total sentc  ="+numOfSntncPerBook+" for book path "+path);
 			chunk.setTokenListWithoutStopwordAndPunctuation(stpwrdPuncRmvd);
 			Feature feature = feu.generateFeature(chunkNo, paragraphCount, sentenceCount, raw, null, stpwrdPuncRmvd, malePrpPosPronounCount,
@@ -417,7 +412,7 @@ public class ChunkDetailsGenerator {
 
 			chunkSize = batchCtr < batchNumber ? TTR_CHUNK_SIZE : remainder;
 			for (int index = 0; index < chunkSize; index++) {
-				if(wordcntr<tokens.size()) {
+
 				String token = tokens.get(wordcntr);
 				textTokens.add(token);
 
@@ -442,7 +437,6 @@ public class ChunkDetailsGenerator {
 				wordcntr++;
 			}
 
-		}
 			if (remainder != 0 && batchCtr == batchNumber)
 				textTokens.addAll(appendAtEnd);
 
